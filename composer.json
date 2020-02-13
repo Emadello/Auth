@@ -1,5 +1,5 @@
 {
-    "name": "Emadello/Auth",
+    "name": "emadello/auth",
     "type": "library",
     "description": "User Management with permissions for backend control panels",
     "keywords": ["users","auth","cp","backend"],
