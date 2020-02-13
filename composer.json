@@ -1,6 +1,6 @@
 {
     "name": "emadello/auth",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "type": "library",
     "description": "User Management with permissions for backend control panels",
     "keywords": ["users","auth","cp","backend"],
@@ -17,5 +17,8 @@
     "require": {
         "emadello/db": "1.0.*",
         "emadello/validations": "1.0.*"
+    },
+    "autoload": {
+      "psr-0": {"Emadello": "src/"}
     }
 }
