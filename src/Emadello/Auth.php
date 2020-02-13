@@ -95,7 +95,6 @@ class Auth implements AuthInterface {
 
         $this->clearUserData();
         return false;
-
       }
     }
 
@@ -208,9 +207,15 @@ class Auth implements AuthInterface {
 
   public function checkLoggedIn($userlevel) {
     if (!$this->checkLogin() || $this->userinfo['userlevel'] != $userlevel) {
-      header("Location: ".self::LOGINURL);
-      exit();
-    }
+
+      if (self::FORCELOGIN) {
+        header("Location: ".self::LOGINURL);
+        exit();
+      } else {
+        return false;
+      }
+
+    } else return true;
   }
 
 }
