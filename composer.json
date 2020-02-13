@@ -1,0 +1,16 @@
+{
+    "name": "Emadello/Auth",
+    "type": "library",
+    "description": "User Management with permissions for backend control panels",
+    "keywords": ["users","auth","cp","backend"],
+    "homepage": "https://www.emadmhossam.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Emad ElShafie",
+            "email": "emad_moh@outlook.com",
+            "homepage": "https://www.emadmhossam.com",
+            "role": "Developer"
+        }
+    ]
+}
