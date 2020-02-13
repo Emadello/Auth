@@ -3,12 +3,12 @@
 namespace Emadello;
 
 use Emadello\Api\AuthInterface;
-use \Emadello\Db\db;
-use \Emadello\Validations\validate;
+use \Emadello\Db\Db;
+use \Emadello\Validations\Validate;
 
 use \PDO;
 
-class auth implements AuthInterface {
+class Auth implements AuthInterface {
 
   CONST COOKIE_EXPIRE = 60*60*24*30;  //30 days by default
   CONST COOKIE_PATH = "/";  //Avaible in whole domain
