@@ -1,8 +1,8 @@
 <?php
 
-namespace Emadello\Auth;
+namespace Emadello;
 
-use \Emadello\Auth\Api\AuthInterface;
+use Emadello\Api\AuthInterface;
 use \Emadello\Db\db;
 use \Emadello\Validations\validate;
 

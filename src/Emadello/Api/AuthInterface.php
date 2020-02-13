@@ -1,6 +1,6 @@
 <?php
 
-namespace Emadello\Auth\Api;
+namespace Emadello\Api;
 
 /**
  * interface
