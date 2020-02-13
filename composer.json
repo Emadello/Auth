@@ -1,5 +1,6 @@
 {
     "name": "emadello/auth",
+    "version": "1.0.0",
     "type": "library",
     "description": "User Management with permissions for backend control panels",
     "keywords": ["users","auth","cp","backend"],
@@ -12,5 +13,9 @@
             "homepage": "https://www.emadmhossam.com",
             "role": "Developer"
         }
-    ]
+    ],
+    "require": {
+        "emadello/db": "1.0.*",
+        "emadello/validations": "1.0.*"
+    }
 }
