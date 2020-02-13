@@ -3,10 +3,8 @@
 namespace Emadello;
 
 use Emadello\Api\AuthInterface;
-use \Emadello\Db\Db;
-use \Emadello\Validations\Validate;
-
-use \PDO;
+use \Emadello\Db;
+use \Emadello\Validate;
 
 class Auth implements AuthInterface {
 
@@ -60,7 +58,7 @@ class Auth implements AuthInterface {
       $chk1->execute();
 
       if ($chk1->rowCount() > 0) {
-        $userdata = $chk1->fetch(PDO::FETCH_ASSOC);
+        $userdata = $chk1->fetch(\PDO::FETCH_ASSOC);
         if (password_verify($userdata['secret'], $this->cookie[self::COOKIE_SECRET])) {
 
           $this->userinfo = $this->getUserInfo($userdata['user_id']);
@@ -121,7 +119,7 @@ class Auth implements AuthInterface {
 
       if ($chk2->rowCount() > 0) {
 
-        $predata = $chk2->fetch(PDO::FETCH_ASSOC);
+        $predata = $chk2->fetch(\PDO::FETCH_ASSOC);
 
         if (password_verify($password, $predata['password'])) {
 
@@ -165,7 +163,7 @@ class Auth implements AuthInterface {
     $sql = $this->db->con->prepare("SELECT user_id, name, email, phone, userlevel FROM ".AuthInterface::USERS_TABLE." WHERE user_id = :user_id LIMIT 1");
     $sql->bindValue("user_id", $user_id);
     $sql->execute();
-    if ($sql->rowCount() > 0) return $sql->fetch(PDO::FETCH_ASSOC);
+    if ($sql->rowCount() > 0) return $sql->fetch(\PDO::FETCH_ASSOC);
     else return getEmptyUser();
   }
 
