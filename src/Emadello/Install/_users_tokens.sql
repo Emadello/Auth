@@ -43,6 +43,12 @@ CREATE TABLE `_users_tokens` (
 ALTER TABLE `_users_tokens`
   ADD PRIMARY KEY (`at_id`);
 
+  --
+  -- AUTO_INCREMENT for table `_users`
+  --
+  ALTER TABLE `_users_tokens`
+    MODIFY `at_id` int(11) NOT NULL AUTO_INCREMENT;
+  COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
