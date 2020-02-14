@@ -25,12 +25,24 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `_users_tokens` (
+  `at_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `secret` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `hostname` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `dateadded` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `_users`
+--
+ALTER TABLE `_users_tokens`
+  ADD PRIMARY KEY (`at_id`);
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

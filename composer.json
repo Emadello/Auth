@@ -1,6 +1,6 @@
 {
     "name": "emadello/auth",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "type": "library",
     "description": "User Management with permissions for backend control panels",
     "keywords": ["users","auth","cp","backend"],
