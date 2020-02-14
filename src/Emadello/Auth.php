@@ -3,6 +3,8 @@
 namespace Emadello;
 
 use Emadello\Api\AuthInterface;
+use Emadello\Install\Install;
+
 use \Emadello\Db;
 use \Emadello\Validate;
 
@@ -14,12 +16,13 @@ class Auth implements AuthInterface {
   CONST COOKIE_TOKEN = 'EMADELLO_AUTH';
   CONST COOKIE_SECRET = 'EMADELLO_SECRET';
   CONST PROJ_TITLE = 'Project Title';
-  CONST LOGINURL = '/login.php';
+  CONST LOGINURL = 'login.php';
   CONST FORCELOGIN = true;
   CONST TIMEZONE = 'Africa/Cairo';
 
   protected $db;
   protected $validate;
+  protected $checkInstalled;
 
   //Declarations
   public $logged_in = false;
@@ -32,8 +35,10 @@ class Auth implements AuthInterface {
   public function __construct() {
 
     date_default_timezone_set(self::TIMEZONE);
-    $this->db = new db();
-    $this->validate = new validate();
+    $this->db = new Db();
+    $this->validate = new Validate();
+
+    $this->checkInstalled = new Install();
 
     if (!$_GET['logout'] && strpos($_SERVER['REQUEST_URI'],'auth') == false && strpos($_SERVER['REQUEST_URI'],'_POST') == false && strpos($_SERVER['REQUEST_URI'],'login') == false && strpos($_SERVER['REQUEST_URI'],'post') == false) {
       $_SESSION['ref'] = $_SERVER['REQUEST_URI'];
@@ -79,9 +84,7 @@ class Auth implements AuthInterface {
       }
 
     }
-
     if ($this->session['userinfo']) {
-
       // Check if the user is still on the system
       $checkUserInfo = $this->getUserInfo($this->session['userinfo']['user_id']);
       if ($checkUserInfo['user_id'] > 0) {
@@ -133,7 +136,10 @@ class Auth implements AuthInterface {
             setcookie(self::COOKIE_TOKEN, $token, time()+self::COOKIE_EXPIRE, self::COOKIE_PATH);
             setcookie(self::COOKIE_SECRET, password_hash($secret, PASSWORD_DEFAULT), time()+self::COOKIE_EXPIRE, self::COOKIE_PATH);
           }
-
+          if ($referto) {
+            header("Location: ".$referto);
+            exit();
+          }
           return true;
 
         } else $this->error = "Incorrect login information provided";
@@ -186,7 +192,7 @@ class Auth implements AuthInterface {
 
 		$hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
 
-		$query = $this->db->con->prepare("INSERT INTO ".AuthInterface::ACCESSTOKENS_TABLE." VALUES ('', :user_id, :token, :secret, :hostname, ".time().")");
+		$query = $this->db->con->prepare("INSERT INTO ".AuthInterface::ACCESSTOKENS_TABLE." VALUES (0, :user_id, :token, :secret, :hostname, ".time().")");
 		$query->bindValue("user_id", $user_id);
 		$query->bindValue("token", $token);
 		$query->bindValue("secret", $secret);
@@ -205,19 +211,19 @@ class Auth implements AuthInterface {
 
   }
 
-  public function checkLoggedIn($userlevel) {
-    if (!$this->checkLogin() || $this->userinfo['userlevel'] != $userlevel) {
-
+  public function checkLoggedIn(array $userlevels) {
+    if (!$this->checkLogin() || !in_array($this->userinfo['userlevel'], $userlevels)) {
       if (self::FORCELOGIN) {
-        header("Location: ".self::LOGINURL);
-        exit();
+        if (basename($_SERVER['PHP_SELF']) != self::LOGINURL) {
+          header("Location: ".self::LOGINURL);
+          exit();
+        }
       } else {
         return false;
       }
-
-    } else return true;
+    }
+    return true;
   }
-
 }
 
 ?>
