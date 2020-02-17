@@ -29,7 +29,7 @@ class Install implements AuthInterface {
   }
 
   public function adminExists() {
-    $chk = $this->db->con->query("SELECT user_id FROM ".AuthInterface::USERS_TABLE." WHERE userlevel = ".AuthInterface::ADMIN_USERLEVEL);
+    $chk = $this->db->con()->query("SELECT user_id FROM ".AuthInterface::USERS_TABLE." WHERE userlevel = ".AuthInterface::ADMIN_USERLEVEL);
     if ($chk->rowCount() > 0) return true;
 
     return false;
@@ -51,7 +51,7 @@ class Install implements AuthInterface {
 
     try {
 
-      $chk = $this->db->con->query("SHOW TABLES LIKE '$table'");
+      $chk = $this->db->con()->query("SHOW TABLES LIKE '$table'");
       if ($chk->rowCount() > 0) return true;
 
     } catch (PDOException $e) {
@@ -66,31 +66,31 @@ class Install implements AuthInterface {
     $output = '<center><br /><br />';
     try {
       $adminUserInstall = false;
-      $this->db->con->beginTransaction();
+      $this->db->con()->beginTransaction();
       $output .= '<b>Installing missing / corrupted tables</b><br /><br />';
       if (!$this->tableExists(AuthInterface::LOGINATTEMPTS_TABLE)) {
         // login attempts table does not exists
         $output .= 'Installing _login_attempts table ... ';
-        $this->db->con->query(\file_get_contents(__DIR__.'/_login_attempts.sql'));
+        $this->db->con()->query(\file_get_contents(__DIR__.'/_login_attempts.sql'));
         $output .= 'Done<br />';
       }
       if (!$this->tableExists(AuthInterface::ACCESSTOKENS_TABLE)) {
         // login attempts table does not exists
         $output .= 'Installing _users_tokens table ... ';
-        $this->db->con->query(\file_get_contents(__DIR__.'/_users_tokens.sql'));
+        $this->db->con()->query(\file_get_contents(__DIR__.'/_users_tokens.sql'));
         $output .= 'Done<br />';
       }
       if (!$this->tableExists(AuthInterface::USERS_TABLE)) {
         // users table does not exists
         $adminUserInstall = true;
         $output .= 'Installing _users table ... ';
-        $this->db->con->query(\file_get_contents(__DIR__.'/_users.sql'));
+        $this->db->con()->query(\file_get_contents(__DIR__.'/_users.sql'));
         $output .= 'Done<br />';
       }
       if (!$this->tableExists(AuthInterface::PERMS_TABLE)) {
         // permissions table does not exists
         $output .= 'Installing _users_perms table ... ';
-        $this->db->con->query(\file_get_contents(__DIR__.'/_users_perms.sql'));
+        $this->db->con()->query(\file_get_contents(__DIR__.'/_users_perms.sql'));
         $output .= 'Done<br />';
       }
 
@@ -98,11 +98,11 @@ class Install implements AuthInterface {
 
       if (!$adminUserInstall) $output .= "<br /><br /><b>Successfully Installed Tables</b><br /><br /><a href=\"index.php\">Run Web Application</a>";
       else $output .= $this->drawAdminCredsForm();
-      $this->db->con->commit();
+      $this->db->con()->commit();
     } catch (PDOException $e) {
 
       $output .= "<b>ERROR Installing tables: ".$e->getMessage()."</b><br /><br /><a href=\"index.php\">Back</a>";
-      $this->db->con->rollBack();
+      $this->db->con()->rollBack();
 
     }
     $output .= '</center>';
@@ -148,7 +148,7 @@ class Install implements AuthInterface {
     if ($success) {
 
       // Install admin
-      $sql = $this->db->con->prepare("INSERT INTO ".AuthInterface::USERS_TABLE." VALUES (
+      $sql = $this->db->con()->prepare("INSERT INTO ".AuthInterface::USERS_TABLE." VALUES (
         ?,
         ?,
         ?,

@@ -58,7 +58,7 @@ class Auth implements AuthInterface {
 
     if (isset($this->cookie[self::COOKIE_TOKEN])) {
 
-      $chk1 = $this->db->con->prepare("SELECT * FROM ".AuthInterface::ACCESSTOKENS_TABLE." WHERE token = :token LIMIT 1");
+      $chk1 = $this->db->con()->prepare("SELECT * FROM ".AuthInterface::ACCESSTOKENS_TABLE." WHERE token = :token LIMIT 1");
       $chk1->bindValue("token", $this->cookie[self::COOKIE_TOKEN]);
       $chk1->execute();
 
@@ -115,7 +115,7 @@ class Auth implements AuthInterface {
         return false;
       }
 
-      $chk2 = $this->db->con->prepare("SELECT user_id, password FROM ".AuthInterface::USERS_TABLE." WHERE email = :email LIMIT 1");
+      $chk2 = $this->db->con()->prepare("SELECT user_id, password FROM ".AuthInterface::USERS_TABLE." WHERE email = :email LIMIT 1");
       $chk2->bindValue("email", $email);
       $chk2->execute();
 
@@ -165,7 +165,7 @@ class Auth implements AuthInterface {
   // Get User Info
   public function getUserInfo($user_id) {
 
-    $sql = $this->db->con->prepare("SELECT user_id, name, email, phone, userlevel FROM ".AuthInterface::USERS_TABLE." WHERE user_id = :user_id LIMIT 1");
+    $sql = $this->db->con()->prepare("SELECT user_id, name, email, phone, userlevel FROM ".AuthInterface::USERS_TABLE." WHERE user_id = :user_id LIMIT 1");
     $sql->bindValue("user_id", $user_id);
     $sql->execute();
     if ($sql->rowCount() > 0) return $sql->fetch(\PDO::FETCH_ASSOC);
@@ -192,7 +192,7 @@ class Auth implements AuthInterface {
 
 		$hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
 
-		$query = $this->db->con->prepare("INSERT INTO ".AuthInterface::ACCESSTOKENS_TABLE." VALUES (0, :user_id, :token, :secret, :hostname, ".time().")");
+		$query = $this->db->con()->prepare("INSERT INTO ".AuthInterface::ACCESSTOKENS_TABLE." VALUES (0, :user_id, :token, :secret, :hostname, ".time().")");
 		$query->bindValue("user_id", $user_id);
 		$query->bindValue("token", $token);
 		$query->bindValue("secret", $secret);
