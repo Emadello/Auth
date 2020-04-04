@@ -25,7 +25,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `_users_perms` (
   `user_id` bigint(11) NOT NULL,
-  `permid` int(11) NOT NULL
+  `permid` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
