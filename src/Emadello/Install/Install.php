@@ -15,8 +15,8 @@ class Install implements AuthInterface {
     $this->db = new Db();
     $this->getData = $_GET;
     $this->postData = $_POST;
-    if ($this->postData['email'] && $this->postData['password'] && $this->getData['module'] == 'Auth' && $this->getData['forceInstall'] == 1) $this->installAdminUser();
-    elseif ($this->getData['module'] == 'Auth' && $this->getData['forceInstall'] == 1) $this->beginInstall();
+    if (isset($this->postData['email']) && isset($this->postData['password']) && isset($this->getData['module']) && $this->getData['module'] == 'Auth' && isset($this->getData['forceInstall']) && $this->getData['forceInstall'] == 1) $this->installAdminUser();
+    elseif (isset($this->getData['module']) && $this->getData['module'] == 'Auth' && isset($this->getData['forceInstall']) && $this->getData['forceInstall'] == 1) $this->beginInstall();
     $this->checkIfInstalled();
   }
 

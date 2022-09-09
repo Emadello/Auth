@@ -40,7 +40,7 @@ class Auth implements AuthInterface {
 
     $this->checkInstalled = new Install();
 
-    if (!$_GET['logout'] && strpos($_SERVER['REQUEST_URI'],'auth') == false && strpos($_SERVER['REQUEST_URI'],'_POST') == false && strpos($_SERVER['REQUEST_URI'],'login') == false && strpos($_SERVER['REQUEST_URI'],'post') == false) {
+    if (!isset($_GET['logout']) && strpos($_SERVER['REQUEST_URI'],'auth') == false && strpos($_SERVER['REQUEST_URI'],'_POST') == false && strpos($_SERVER['REQUEST_URI'],'login') == false && strpos($_SERVER['REQUEST_URI'],'post') == false) {
       $_SESSION['ref'] = $_SERVER['REQUEST_URI'];
     }
 
@@ -48,7 +48,7 @@ class Auth implements AuthInterface {
     $this->session = $_SESSION;
     $this->server = $_SERVER;
 
-    if($_GET['logout']) $this->logout();
+    if(isset($_GET['logout'])) $this->logout();
     else $this->checkLogin();
 
   }
