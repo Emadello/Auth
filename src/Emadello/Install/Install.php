@@ -115,7 +115,7 @@ class Install implements AuthInterface {
     $output = '<form method="post">
     <h2>Admin Credentials</h2><br />
     <b>Email</b><br />
-    <input type="email" name="email" value="'.$this->postData['email'].'" style="padding:5px; width: 300px" /><br /><br />
+    <input type="email" name="email" value="'.isset($this->postData['email']) ? $this->postData['email'] : ''.'" style="padding:5px; width: 300px" /><br /><br />
     <b>Password</b><br />
     <input type="password" name="password" style="padding:5px; width: 300px" /><br /><br />
     <b>Confirm Password</b><br />
