@@ -1,9 +1,14 @@
 {
     "name": "emadello/auth",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "type": "library",
     "description": "User Management with permissions for backend control panels",
-    "keywords": ["users","auth","cp","backend"],
+    "keywords": [
+        "users",
+        "auth",
+        "cp",
+        "backend"
+    ],
     "homepage": "https://www.emadmhossam.com",
     "license": "MIT",
     "authors": [
@@ -15,10 +20,15 @@
         }
     ],
     "require": {
-        "emadello/db": "1.1.*",
+        "emadello/db": "1.2.*",
         "emadello/validations": "1.0.*"
     },
     "autoload": {
-      "psr-0": {"Emadello": "src/"}
+        "psr-0": {
+            "Emadello": "src/"
+        },
+        "psr-4": {
+            "Emadello\\": "src"
+        }
     }
 }
