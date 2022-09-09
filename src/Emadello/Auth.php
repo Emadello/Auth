@@ -84,7 +84,7 @@ class Auth implements AuthInterface {
       }
 
     }
-    if ($this->session['userinfo']) {
+    if (isset($this->session['userinfo'])) {
       // Check if the user is still on the system
       $checkUserInfo = $this->getUserInfo($this->session['userinfo']['user_id']);
       if ($checkUserInfo['user_id'] > 0) {
