@@ -7,8 +7,6 @@ use Emadello\Install\Install;
 
 use \Emadello\Db;
 use \Emadello\Validate;
-use \DevCoder\DotEnv;
-use \Composer\Factory;
 
 class Auth implements AuthInterface {
 
@@ -37,18 +35,11 @@ class Auth implements AuthInterface {
   public function __construct() {
 
     // Check installation
-    $reflection = new \ReflectionClass(\Composer\Autoload\ClassLoader::class);
-    $this->projectPath = dirname($reflection->getFileName(), 3);
-    if (!is_file($this->projectPath.'/'.$this->envFile)) {
-      echo '<br /><br /><br /><center>Missing env file</center>';
-      exit();
-    }
+    $this->checkInstalled = new Install();
 
     date_default_timezone_set(self::TIMEZONE);
     $this->db = new Db();
     $this->validate = new Validate();
-
-    $this->checkInstalled = new Install();
 
     if (!isset($_GET['logout']) && strpos($_SERVER['REQUEST_URI'],'auth') == false && strpos($_SERVER['REQUEST_URI'],'_POST') == false && strpos($_SERVER['REQUEST_URI'],'login') == false && strpos($_SERVER['REQUEST_URI'],'post') == false) {
       $_SESSION['ref'] = $_SERVER['REQUEST_URI'];

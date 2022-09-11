@@ -4,6 +4,8 @@ namespace Emadello\Install;
 
 use Emadello\Api\AuthInterface;
 use \Emadello\Db;
+use \DevCoder\DotEnv;
+use \Composer\Factory;
 
 class Install implements AuthInterface {
 
@@ -11,13 +13,26 @@ class Install implements AuthInterface {
   protected $getData;
   protected $postData;
   protected $installed = true;
+  protected $envFile = '/.env';
+
   public function __construct() {
+    $this->checkEnvFile();
     $this->db = new Db();
     $this->getData = $_GET;
     $this->postData = $_POST;
+
     if (isset($this->postData['email']) && isset($this->postData['password']) && isset($this->getData['module']) && $this->getData['module'] == 'Auth' && isset($this->getData['forceInstall']) && $this->getData['forceInstall'] == 1) $this->installAdminUser();
     elseif (isset($this->getData['module']) && $this->getData['module'] == 'Auth' && isset($this->getData['forceInstall']) && $this->getData['forceInstall'] == 1) $this->beginInstall();
     $this->checkIfInstalled();
+  }
+
+  protected function checkEnvFile() {
+    $reflection = new \ReflectionClass(\Composer\Autoload\ClassLoader::class);
+    $this->projectPath = dirname($reflection->getFileName(), 3);
+    if (!is_file($this->projectPath.'/'.$this->envFile)) {
+      echo '<br /><br /><br /><center>Missing env file</center>';
+      exit();
+    }
   }
 
   public function checkIfInstalled() {
@@ -169,4 +184,3 @@ class Install implements AuthInterface {
     }
   }
 }
-?>
