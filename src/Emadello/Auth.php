@@ -7,6 +7,8 @@ use Emadello\Install\Install;
 
 use \Emadello\Db;
 use \Emadello\Validate;
+use \DevCoder\DotEnv;
+use \Composer\Factory;
 
 class Auth implements AuthInterface {
 
@@ -33,6 +35,14 @@ class Auth implements AuthInterface {
   protected $server;
 
   public function __construct() {
+
+    // Check installation
+    $reflection = new \ReflectionClass(\Composer\Autoload\ClassLoader::class);
+    $this->projectPath = dirname($reflection->getFileName(), 3);
+    if (!is_file($this->projectPath.'/'.$this->envFile)) {
+      echo '<br /><br /><br /><center>Missing env file</center>';
+      exit();
+    }
 
     date_default_timezone_set(self::TIMEZONE);
     $this->db = new Db();
