@@ -139,16 +139,31 @@ class Install implements AuthInterface
   {
     $output = '<center><form method="post">
     <h2>DB Credentials</h2><br />
-    <b>Host</b><br />
-    <input type="dbhost" name="dbhost" value="' . ((isset($this->postData) && isset($this->postData['dbhost'])) ? $this->postData['dbhost'] : 'localhost') . '" style="padding:5px; width: 300px" /><br /><br />
-    <b>Port</b><br />
-    <input type="dbport" name="dbport" value="' . ((isset($this->postData) && isset($this->postData['dbport'])) ? $this->postData['dbport'] : 3306) . '" style="padding:5px; width: 300px" /><br /><br />
-    <b>DB Name</b><br />
-    <input type="dbname" name="dbname" value="' . ((isset($this->postData) && isset($this->postData['dbname'])) ? $this->postData['dbname'] : '') . '" style="padding:5px; width: 300px" /><br /><br />
-    <b>Username</b><br />
-    <input type="dbuser" name="dbuser" value="' . ((isset($this->postData) && isset($this->postData['dbuser'])) ? $this->postData['dbuser'] : '') . '" style="padding:5px; width: 300px" /><br /><br />
+    <b>Host</b> <span style="color:red">*</span><br />
+    <input type="text" name="dbhost" value="' . ((isset($this->postData) && isset($this->postData['dbhost'])) ? $this->postData['dbhost'] : 'localhost') . '" style="padding:5px; width: 300px" /><br /><br />
+    <b>Port</b> <span style="color:red">*</span><br />
+    <input type="text" name="dbport" value="' . ((isset($this->postData) && isset($this->postData['dbport'])) ? $this->postData['dbport'] : 3306) . '" style="padding:5px; width: 300px" /><br /><br />
+    <b>DB Name</b> <span style="color:red">*</span><br />
+    <input type="text" name="dbname" value="' . ((isset($this->postData) && isset($this->postData['dbname'])) ? $this->postData['dbname'] : '') . '" style="padding:5px; width: 300px" /><br /><br />
+    <b>Username</b> <span style="color:red">*</span><br />
+    <input type="text" name="dbuser" value="' . ((isset($this->postData) && isset($this->postData['dbuser'])) ? $this->postData['dbuser'] : '') . '" style="padding:5px; width: 300px" /><br /><br />
     <b>Password</b><br />
-    <input type="dbpass" name="dbpass" style="padding:5px; width: 300px" /><br /><br />
+    <input type="password" name="dbpass" style="padding:5px; width: 300px" /><br /><br />
+    <h2>Project Settings</h2><br />
+    <b>Project Title</b> <span style="color:red">*</span><br />
+    <input type="text" name="project_title" value="' . ((isset($this->postData) && isset($this->postData['project_title'])) ? $this->postData['project_title'] : '') . '" style="padding:5px; width: 300px" /><br /><br />
+    <b>Web Application URL</b> <span style="color:red">*</span><br />
+    <input type="text" name="base_url" value="' . ((isset($this->postData) && isset($this->postData['base_url'])) ? $this->postData['base_url'] : '') . '" style="padding:5px; width: 300px" /><br /><br />
+    <b>Media Folder</b> <span style="color:red">*</span><br />
+    <input type="text" name="media_folder" value="' . ((isset($this->postData) && isset($this->postData['media_folder'])) ? $this->postData['media_folder'] : 'public/media') . '" style="padding:5px; width: 300px" /><br /><br />
+    <b>Email From</b> <span style="color:red">*</span><br />
+    <input type="text" name="email_from" value="' . ((isset($this->postData) && isset($this->postData['email_from'])) ? $this->postData['email_from'] : '') . '" style="padding:5px; width: 300px" /><br /><br />
+    <b>Email To</b> <span style="color:red">*</span><br />
+    <input type="text" name="email_to" value="' . ((isset($this->postData) && isset($this->postData['email_to'])) ? $this->postData['email_to'] : '') . '" style="padding:5px; width: 300px" /><br /><br />
+    <b>Email Reply To</b> <span style="color:red">*</span><br />
+    <input type="text" name="email_reply_to" value="' . ((isset($this->postData) && isset($this->postData['email_reply_to'])) ? $this->postData['email_reply_to'] : '') . '" style="padding:5px; width: 300px" /><br /><br />
+    <b>Email No-Reply</b> <span style="color:red">*</span><br />
+    <input type="text" name="email_no_reply" value="' . ((isset($this->postData) && isset($this->postData['email_no_reply'])) ? $this->postData['email_no_reply'] : '') . '" style="padding:5px; width: 300px" /><br /><br />
     <input type="hidden" name="newEnvFile" value=1 />
     <input type="submit" style="padding:10px; width:300px" value="Continue" />
     </form></center>';
@@ -212,6 +227,34 @@ class Install implements AuthInterface
       $success = false;
       $error = '<span style="color:red">Please enter Username</span>';
     }
+    if (!$this->postData['project_title']) {
+      $success = false;
+      $error = '<span style="color:red">Please enter Project Title</span>';
+    }
+    if (!$this->postData['base_url']) {
+      $success = false;
+      $error = '<span style="color:red">Please enter Base URL</span>';
+    }
+    if (!$this->postData['media_folder']) {
+      $success = false;
+      $error = '<span style="color:red">Please enter Media Folder</span>';
+    }
+    if (!$this->postData['email_from']) {
+      $success = false;
+      $error = '<span style="color:red">Please enter Email From Address</span>';
+    }
+    if (!$this->postData['email_to']) {
+      $success = false;
+      $error = '<span style="color:red">Please enter Email To Address</span>';
+    }
+    if (!$this->postData['email_reply_to']) {
+      $success = false;
+      $error = '<span style="color:red">Please enter Email Reply To Address</span>';
+    }
+    if (!$this->postData['email_no_reply']) {
+      $success = false;
+      $error = '<span style="color:red">Please enter Email No-Reply Address</span>';
+    }
     if ($success) {
       $reflection = new \ReflectionClass(\Composer\Autoload\ClassLoader::class);
       $this->projectPath = dirname($reflection->getFileName(), 3);
@@ -222,6 +265,17 @@ class Install implements AuthInterface
       $txt .= "DBUSER=" . $this->postData['dbuser'] . "\n";
       $txt .= "DBPASS=" . $this->postData['dbpass'] . "\n";
       $txt .= "DBKEY=\"" . $this->GUID() . "\"\n";
+      $txt .= "BASE_PATH=\"" . $this->projectPath . "\"\n";
+      $txt .= "TEMPLATE=\"native\"\n";
+      $txt .= "WEBSITE_BASE_URL=\"" . $this->postData['base_url'] . "\"\n";
+      $txt .= "MEDIA_FOLDER=\"" . $this->postData['media_folder'] . "\"\n";
+      $txt .= "CP_BASE_URL=\"" . $this->postData['base_url'] . "/cp\"\n";
+      $txt .= "PROJ_TITLE=\"" . $this->postData['project_title'] . "\"\n";
+      $txt .= "EMAIL_FROM=\"" . $this->postData['email_from'] . "\"\n";
+      $txt .= "EMAIL_TO=\"" . $this->postData['email_to'] . "\"\n";
+      $txt .= "EMAIL_REPLYTO=\"" . $this->postData['email_reply_to'] . "\"\n";
+      $txt .= "EMAIL_NOREPLY=\"" . $this->postData['email_no_reply'] . "\"\n";
+
       fwrite($newEnvFile, $txt);
       fclose($newEnvFile);
     } else {
