@@ -107,17 +107,17 @@ class Auth implements AuthInterface {
   }
 
   // Login Function
-  public function login($email, $password, $rememberme, $referto) {
+  public function login($username, $password, $rememberme, $referto) {
 
     if (!$this->checkLogin()) {
 
-      if (!$email || !$password) {
+      if (!$username || !$password) {
         $this->error = "Incorrect login information provided";
         return false;
       }
 
-      $chk2 = $this->db->con()->prepare("SELECT user_id, password FROM ".AuthInterface::USERS_TABLE." WHERE email = :email LIMIT 1");
-      $chk2->bindValue("email", $email);
+      $chk2 = $this->db->con()->prepare("SELECT user_id, password FROM ".AuthInterface::USERS_TABLE." WHERE email = :username OR phone = :username LIMIT 1");
+      $chk2->bindValue("username", $username);
       $chk2->execute();
 
       if ($chk2->rowCount() > 0) {
@@ -170,7 +170,7 @@ class Auth implements AuthInterface {
     $sql->bindValue("user_id", $user_id);
     $sql->execute();
     if ($sql->rowCount() > 0) return $sql->fetch(\PDO::FETCH_ASSOC);
-    else return getEmptyUser();
+    else return $this->getEmptyUser();
   }
 
   // Return Empty User Info
