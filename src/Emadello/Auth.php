@@ -145,7 +145,7 @@ class Auth implements AuthInterface {
 
         } else $this->error = "Incorrect login information provided";
 
-      } else $this->error = "Email not found in database";
+      } else $this->error = "User not found in database";
 
     } else return false;
 
