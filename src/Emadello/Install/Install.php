@@ -14,6 +14,7 @@ class Install implements AuthInterface
   protected $postData;
   protected $installed = true;
   protected $envFile = '/.env';
+  protected $projectPath;
   public function __construct()
   {
     $this->getData = $_GET;
