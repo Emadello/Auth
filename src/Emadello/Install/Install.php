@@ -35,7 +35,12 @@ class Install implements AuthInterface
         echo $this->drawEnvFileForm();
         exit();
       } else {
-        echo '<br /><br /><br /><center>Missing env file<br /><br /><a href="?genEnvFile=1">Generate env file</a></center>';
+        echo '<center>';
+        if (is_file('images/logo.svg')) {
+          echo '<br /><br /><img src="images/logo.svg" style="width: 50%; max-width: 150px" /><br />';
+        }
+        echo '<b>ePanel</b></center>';
+        echo '<br /><br /><br /><center>Missing env file<br /><br /><a href="?genEnvFile=1" style="padding: 20px; background: #EEE; display:inline-block; border: 1px solid #ddd; color: navy; text-decoration: none; ">Generate env file</a></center>';
         exit();
       }
     }
@@ -56,8 +61,13 @@ class Install implements AuthInterface
   }
   public function forceInstall()
   {
-    $output = '<center>
-    <br /><b>ERROR - One or more of the main tables are missing<br /><br />
+    $output = '<center>';
+    if (is_file('images/logo.svg')) {
+      $output .= '<br /><br /><img src="images/logo.svg" style="width: 50%; max-width: 150px" /><br />';
+    }
+    $output .= '<b>ePanel</b></center>';
+    $output .= '<center>
+    <br /><b>One or more of the main tables are missing<br /><br />
     <a href="' . basename($_SERVER['PHP_SELF']) . '?module=Auth&forceInstall=1">Click here to re-install system users</a></b>
     </center>';
     echo $output;
@@ -80,7 +90,14 @@ class Install implements AuthInterface
   }
   public function beginInstall()
   {
+
     $output = '<center><br /><br />';
+
+    if (is_file('images/logo.svg')) {
+      $output .= '<br /><br /><img src="images/logo.svg" style="width: 50%; max-width: 150px" /><br />';
+    }
+    $output .= '<b>ePanel</b><br /><br />';
+
     try {
       $adminUserInstall = false;
       $this->db->con()->beginTransaction();
@@ -111,8 +128,9 @@ class Install implements AuthInterface
         $output .= 'Done<br />';
       }
       if (!$this->adminExists(1)) $adminUserInstall = true;
-      if (!$adminUserInstall) $output .= "<br /><br /><b>Successfully Installed Tables</b><br /><br /><a href=\"index.php\">Run Web Application</a>";
-      else $output .= $this->drawAdminCredsForm();
+      if (!$adminUserInstall) {
+        $output .= "<br /><br /><b>Successfully Installed Tables</b><br /><br /><a href=\"index.php\">Run Web Application</a>";
+      } else $output .= $this->drawAdminCredsForm();
       $this->db->con()->commit();
     } catch (\PDOException $e) {
       $output .= "<b>ERROR Installing tables: " . $e->getMessage() . "</b><br /><br /><a href=\"index.php\">Back</a>";
@@ -138,7 +156,14 @@ class Install implements AuthInterface
   }
   public function drawEnvFileForm()
   {
-    $output = '<center><form method="post">
+    $output = '<center>';
+
+    if (is_file('images/logo.svg')) {
+      $output .= '<br /><br /><img src="images/logo.svg" style="width: 50%; max-width: 150px" /><br />';
+    }
+    $output .= '<b>ePanel</b>';
+
+    $output .= '<form method="post">
     <h2>DB Credentials</h2><br />
     <b>Host</b> <span style="color:red">*</span><br />
     <input type="text" name="dbhost" value="' . ((isset($this->postData) && isset($this->postData['dbhost'])) ? $this->postData['dbhost'] : 'localhost') . '" style="padding:5px; width: 300px" /><br /><br />
@@ -187,6 +212,7 @@ class Install implements AuthInterface
       $error = '<span style="color:red">Passwords do not match</span>';
     }
     if ($success) {
+      
       // Install admin
       $sql = $this->db->con()->prepare("INSERT INTO " . AuthInterface::USERS_TABLE . " VALUES (
         ?,
@@ -199,7 +225,15 @@ class Install implements AuthInterface
         ?
         )");
       $sql->execute([0, $this->postData['email'], \password_hash($this->postData['password'], PASSWORD_DEFAULT), 'Administrator', '', 1, AuthInterface::ADMIN_USERLEVEL, 0]);
-      echo "<center><br /><br /><b>Successfully Installed Tables</b><br /><br /><a href=\"index.php\">Run Web Application</a></center>";
+      echo '<center><br /><br />';
+
+      if (is_file('images/logo.svg')) {
+        echo '<br /><br /><img src="images/logo.svg" style="width: 50%; max-width: 150px" /><br />';
+      }
+      echo '<b>ePanel</b><br /><br />';
+
+      
+      echo "<br /><br /><b>Successfully Installed Tables</b><br /><br /><a href=\"index.php\">Run Web Application</a></center>";
       exit();
     } else {
       echo '<center>

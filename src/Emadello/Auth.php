@@ -4,18 +4,16 @@ namespace Emadello;
 
 use Emadello\Api\AuthInterface;
 use Emadello\Install\Install;
-
 use \Emadello\Db;
 use \Emadello\Validate;
+use \DevCoder\DotEnv;
+use \Composer\Factory;
 
 class Auth implements AuthInterface {
 
   CONST COOKIE_EXPIRE = 60*60*24*30;  //30 days by default
   CONST COOKIE_PATH = "/";  //Avaible in whole domain
   CONST USER_TIMEOUT = 10;
-  CONST COOKIE_TOKEN = 'EMADELLO_AUTH';
-  CONST COOKIE_SECRET = 'EMADELLO_SECRET';
-  CONST PROJ_TITLE = 'Project Title';
   CONST LOGINURL = 'login.php';
   CONST FORCELOGIN = true;
   CONST TIMEZONE = 'Africa/Cairo';
@@ -23,6 +21,9 @@ class Auth implements AuthInterface {
   protected $db;
   protected $validate;
   protected $checkInstalled;
+  protected $cookie_token_var;
+  protected $cookie_secret_var;
+  protected $proj_title;
 
   //Declarations
   public $logged_in = false;
@@ -49,23 +50,30 @@ class Auth implements AuthInterface {
     $this->session = $_SESSION;
     $this->server = $_SERVER;
 
+    $this->applyCookieNames();
+
     if(isset($_GET['logout'])) $this->logout();
     else $this->checkLogin();
 
   }
 
+  protected function applyCookieNames() {
+    $this->cookie_token_var = str_replace(" ", "", getenv('PROJ_TITLE')).'_AUTH';
+    $this->cookie_secret_var = str_replace(" ", "", getenv('PROJ_TITLE')).'_SECRET';
+  }
+
   //Check if user is logged in
   public function checkLogin() {
 
-    if (isset($this->cookie[self::COOKIE_TOKEN])) {
+    if (isset($this->cookie[$this->cookie_token_var])) {
 
       $chk1 = $this->db->con()->prepare("SELECT * FROM ".AuthInterface::ACCESSTOKENS_TABLE." WHERE token = :token LIMIT 1");
-      $chk1->bindValue("token", $this->cookie[self::COOKIE_TOKEN]);
+      $chk1->bindValue("token", $this->cookie[$this->cookie_token_var]);
       $chk1->execute();
 
       if ($chk1->rowCount() > 0) {
         $userdata = $chk1->fetch(\PDO::FETCH_ASSOC);
-        if (password_verify($userdata['secret'], $this->cookie[self::COOKIE_SECRET])) {
+        if (password_verify($userdata['secret'], $this->cookie[$this->cookie_secret_var])) {
 
           $this->userinfo = $this->getUserInfo($userdata['user_id']);
           $_SESSION['userinfo'] = $this->userinfo;
@@ -73,13 +81,13 @@ class Auth implements AuthInterface {
           return true;
 
         } else {
-          // Bad cookie :( force logout this mofo
+          // Bad cookie :( force logout
           $this->clearUserData();
           return false;
         }
 
       } else {
-        // Bad cookie :( force logout this mofo
+        // Bad cookie :( force logout
         $this->clearUserData();
         return false;
       }
@@ -134,8 +142,8 @@ class Auth implements AuthInterface {
             $token = $this->GUID();
             $secret = $this->GUID();
             $this->insertToken($this->userinfo['user_id'], $token, $secret);
-            setcookie(self::COOKIE_TOKEN, $token, time()+self::COOKIE_EXPIRE, self::COOKIE_PATH);
-            setcookie(self::COOKIE_SECRET, password_hash($secret, PASSWORD_DEFAULT), time()+self::COOKIE_EXPIRE, self::COOKIE_PATH);
+            setcookie($this->cookie_token_var, $token, time()+self::COOKIE_EXPIRE, self::COOKIE_PATH);
+            setcookie($this->cookie_secret_var, password_hash($secret, PASSWORD_DEFAULT), time()+self::COOKIE_EXPIRE, self::COOKIE_PATH);
           }
           if ($referto) {
             header("Location: ".$referto);
@@ -207,8 +215,8 @@ class Auth implements AuthInterface {
     unset($this->userinfo);
     unset($this->session['userinfo']);
     unset($_SESSION['userinfo']);
-    setcookie(self::COOKIE_TOKEN, "", time()+self::COOKIE_EXPIRE, self::COOKIE_PATH);
-    setcookie(self::COOKIE_SECRET,   "", time()+self::COOKIE_EXPIRE, self::COOKIE_PATH);
+    setcookie($this->cookie_token_var, "", time()+self::COOKIE_EXPIRE, self::COOKIE_PATH);
+    setcookie($this->cookie_secret_var,   "", time()+self::COOKIE_EXPIRE, self::COOKIE_PATH);
 
   }
 
