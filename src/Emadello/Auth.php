@@ -65,6 +65,19 @@ class Auth implements AuthInterface {
   //Check if user is logged in
   public function checkLogin() {
 
+    if (isset($this->session['userinfo'])) {
+      // Check if the user is still on the system
+      $checkUserInfo = $this->getUserInfo($this->session['userinfo']['user_id']);
+      if ($checkUserInfo['user_id'] > 0) {
+
+        $this->userinfo = $checkUserInfo;
+        $_SESSION['userinfo'] = $this->userinfo;
+        $this->logged_in = true;
+        return true;
+
+      }
+    }
+
     if (isset($this->cookie[$this->cookie_token_var])) {
 
       $chk1 = $this->db->con()->prepare("SELECT * FROM ".AuthInterface::ACCESSTOKENS_TABLE." WHERE token = :token LIMIT 1");
@@ -92,22 +105,6 @@ class Auth implements AuthInterface {
         return false;
       }
 
-    }
-    if (isset($this->session['userinfo'])) {
-      // Check if the user is still on the system
-      $checkUserInfo = $this->getUserInfo($this->session['userinfo']['user_id']);
-      if ($checkUserInfo['user_id'] > 0) {
-
-        $this->userinfo = $checkUserInfo;
-        $_SESSION['userinfo'] = $this->userinfo;
-        $this->logged_in = true;
-        return true;
-
-      } else {
-
-        $this->clearUserData();
-        return false;
-      }
     }
 
     return false;
