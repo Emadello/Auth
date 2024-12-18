@@ -4,7 +4,7 @@ namespace Emadello\Install;
 
 use Emadello\Api\AuthInterface;
 use \Emadello\Db;
-use \DevCoder\DotEnv;
+use \PhpDevCommunity\DotEnv;
 use \Composer\Factory;
 
 class Install implements AuthInterface

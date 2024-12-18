@@ -6,7 +6,7 @@ use Emadello\Api\AuthInterface;
 use Emadello\Install\Install;
 use \Emadello\Db;
 use \Emadello\Validate;
-use \DevCoder\DotEnv;
+use \PhpDevCommunity\DotEnv;
 use \Composer\Factory;
 
 class Auth implements AuthInterface {

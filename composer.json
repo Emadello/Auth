@@ -1,6 +1,6 @@
 {
     "name": "emadello/auth",
-    "version": "1.1.17",
+    "version": "2.0.0",
     "type": "library",
     "description": "User Management with permissions for backend control panels",
     "keywords": [
@@ -20,7 +20,7 @@
         }
     ],
     "require": {
-        "devcoder-xyz/php-dotenv": "1.1.1",
+        "phpdevcommunity/php-dotenv": "3.0.*",
         "php": ">=7.4",
         "composer/composer": "2.4.1",
         "emadello/db": "1.2.*",
