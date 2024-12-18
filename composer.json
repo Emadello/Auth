@@ -23,7 +23,7 @@
         "phpdevcommunity/php-dotenv": "3.0.*",
         "php": ">=7.4",
         "composer/composer": "2.4.1",
-        "emadello/db": "1.2.*",
+        "emadello/db": "2.0.*",
         "emadello/validations": "1.0.*"
     },
     "autoload": {
